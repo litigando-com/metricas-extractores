@@ -1,0 +1,4 @@
+streamlit
+oracledb
+pandas
+python-dotenv
