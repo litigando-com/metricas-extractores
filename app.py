@@ -175,7 +175,12 @@ for c, cat in zip(cols[1:], CATEGORIES):
     pct = (total_cat / total_general * 100) if total_general else 0
     c.metric(LABELS[cat], total_cat, f"{pct:.0f}%")
 
-df_long = df.melt(id_vars="DIA", value_vars=CATEGORIES, var_name="PIPELINE", value_name="CANTIDAD")
+origenes = st.multiselect("Filtrar por origen", options=CATEGORIES, default=CATEGORIES, format_func=lambda c: LABELS[c])
+if not origenes:
+    st.info("Selecciona al menos un origen para ver la grafica.")
+    st.stop()
+
+df_long = df.melt(id_vars="DIA", value_vars=origenes, var_name="PIPELINE", value_name="CANTIDAD")
 df_long["FECHA"] = pd.to_datetime(df_long["DIA"], format="%d/%m/%Y")
 
 if preset == "7 dias":
