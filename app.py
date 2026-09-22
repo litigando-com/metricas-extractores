@@ -177,12 +177,18 @@ for c, cat in zip(cols[1:], CATEGORIES):
 
 df_long = df.melt(id_vars="DIA", value_vars=CATEGORIES, var_name="PIPELINE", value_name="CANTIDAD")
 df_long["FECHA"] = pd.to_datetime(df_long["DIA"], format="%d/%m/%Y")
+df_long["FECHA_LABEL"] = df_long["FECHA"].dt.strftime("%d/%m")
 
 chart = (
     alt.Chart(df_long)
     .mark_line(strokeWidth=2, point=alt.OverlayMarkDef(size=80, filled=True))
     .encode(
-        x=alt.X("FECHA:T", title="Fecha", axis=alt.Axis(format="%d/%m", labelFontSize=13, titleFontSize=14)),
+        x=alt.X(
+            "FECHA_LABEL:N",
+            title="Fecha",
+            sort=alt.SortField(field="FECHA", order="ascending"),
+            axis=alt.Axis(labelFontSize=13, titleFontSize=14),
+        ),
         y=alt.Y(
             "CANTIDAD:Q",
             title="Cantidad de PDFs",
