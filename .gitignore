@@ -4,3 +4,4 @@
 .venv/
 venv/
 __pycache__/
+deploy/ssh/id_rsa
