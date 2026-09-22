@@ -4,8 +4,6 @@ services:
     build:
       context: ./deploy/ssh
 
-    container_name: ssh-tunnel
-
     restart: always
     tty: true
 
@@ -43,8 +41,6 @@ services:
   dashboard:
     build:
       context: .
-
-    container_name: metricas-extractores
 
     env_file:
       - .env
