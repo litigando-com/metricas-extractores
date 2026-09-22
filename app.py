@@ -173,7 +173,7 @@ cols[0].metric("Notificaciones en TORRE_ARCHIVOS_AWS", total_general)
 for c, cat in zip(cols[1:], CATEGORIES):
     total_cat = int(df[cat].sum())
     pct = (total_cat / total_general * 100) if total_general else 0
-    c.metric(LABELS[cat], total_cat, f"{pct:.0f}%")
+    c.metric(LABELS[cat], total_cat, f"{pct:.0f}%", delta_color="off")
 
 origenes = st.multiselect("Filtrar por origen", options=CATEGORIES, default=CATEGORIES, format_func=lambda c: LABELS[c])
 if not origenes:
@@ -283,7 +283,7 @@ with centro:
         st.altair_chart(alt.layer(gauge, gauge_label), width="content")
     with gcol2:
         st.metric("Despachos gestor rama (total)", gestor_rama_totales)
-        st.metric("Cubiertos por Gargantua", gargantua, f"{pct_cobertura:.0f}%")
+        st.metric("Cubiertos por Gargantua", gargantua, f"{pct_cobertura:.0f}%", delta_color="off")
         st.metric("Pendientes (Textract)", pendiente_textract)
 
 st.subheader("Volumen de despachos por metrica")
