@@ -126,6 +126,7 @@ def load_despachos_coverage() -> pd.Series:
 
 
 st.set_page_config(page_title="Cobertura por pipeline", page_icon="assets/icon.png", layout="wide")
+st.markdown("<style>.block-container { padding-bottom: 2rem; }</style>", unsafe_allow_html=True)
 
 st.image("assets/logo.png", width=220)
 st.title("Cobertura diaria por pipeline")
