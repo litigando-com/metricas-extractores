@@ -161,6 +161,8 @@ except Exception as e:
     st.error(f"No se pudo conectar a Oracle ({DB_HOST}:{DB_PORT}/{DB_SERVICE}): {e}")
     st.stop()
 
+df = df[pd.to_datetime(df["DIA"], format="%d/%m/%Y").dt.weekday < 5]
+
 if df.empty:
     st.info("No hay registros en ese rango de fechas.")
     st.stop()
