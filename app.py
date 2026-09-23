@@ -126,7 +126,11 @@ def load_despachos_coverage() -> pd.Series:
 
 
 st.set_page_config(page_title="Cobertura por pipeline", page_icon="assets/icon.png", layout="wide")
-st.markdown("<style>.block-container { padding-bottom: 2rem; }</style>", unsafe_allow_html=True)
+st.markdown(
+    "<style>.block-container { padding-bottom: 2rem; }"
+    ".st-key-total [data-testid=stMetricValue] { color: #1d4a72; }</style>",  # azul oscuro del logo
+    unsafe_allow_html=True,
+)
 
 st.image("assets/logo.png", width=220)
 st.title("Cobertura diaria por pipeline")
@@ -169,11 +173,12 @@ if df.empty:
 
 total_general = int(df["TOTAL_GENERAL"].sum())
 cols = st.columns(len(CATEGORIES) + 1)
-cols[0].metric("Notificaciones en TORRE_ARCHIVOS_AWS", total_general)
-for c, cat in zip(cols[1:], CATEGORIES):
+cols[0].container(key="total").metric("Notificaciones en TORRE_ARCHIVOS_AWS", total_general)
+for c, cat, color in zip(cols[1:], CATEGORIES, COLORS):
     total_cat = int(df[cat].sum())
     pct = (total_cat / total_general * 100) if total_general else 0
-    c.metric(LABELS[cat], total_cat, f"{pct:.0f}%", delta_color="off")
+    c.metric(LABELS[cat], total_cat)
+    c.markdown(f"<span style='color:{color}; font-weight:600'>{pct:.0f}%</span>", unsafe_allow_html=True)
 
 origenes = st.multiselect("Filtrar por origen", options=CATEGORIES, default=CATEGORIES, format_func=lambda c: LABELS[c])
 if not origenes:
