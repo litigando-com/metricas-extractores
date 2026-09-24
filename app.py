@@ -128,7 +128,12 @@ def load_despachos_coverage() -> pd.Series:
 st.set_page_config(page_title="Cobertura por pipeline", page_icon="assets/icon.png", layout="wide")
 st.markdown(
     "<style>.block-container { padding-bottom: 2rem; }"
-    ".st-key-total [data-testid=stMetricValue] { color: #1d4a72; }</style>",  # azul oscuro del logo
+    ".st-key-total [data-testid=stMetricValue] { color: #1d4a72; }"  # azul oscuro del logo
+    + "".join(
+        f'.st-key-origen [data-tag][aria-label="{LABELS[c]}"] {{ background-color: {col}; color: #fff; }}'
+        for c, col in zip(CATEGORIES, COLORS)
+    )
+    + "</style>",
     unsafe_allow_html=True,
 )
 
@@ -180,7 +185,7 @@ for c, cat, color in zip(cols[1:], CATEGORIES, COLORS):
     c.metric(LABELS[cat], total_cat)
     c.markdown(f"<span style='color:{color}; font-weight:600'>{pct:.0f}%</span>", unsafe_allow_html=True)
 
-origenes = st.multiselect("Filtrar por origen", options=CATEGORIES, default=CATEGORIES, format_func=lambda c: LABELS[c])
+origenes = st.multiselect("Filtrar por origen", options=CATEGORIES, default=CATEGORIES, format_func=lambda c: LABELS[c], key="origen")
 if not origenes:
     st.info("Selecciona al menos un origen para ver la grafica.")
     st.stop()
