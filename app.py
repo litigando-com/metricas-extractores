@@ -1,12 +1,14 @@
 import os
 import time
-from datetime import date, datetime, timedelta
+from datetime import date, datetime, timedelta, timezone
 
 import altair as alt
 import oracledb
 import pandas as pd
 import streamlit as st
 from dotenv import load_dotenv
+
+BOGOTA = timezone(timedelta(hours=-5))  # Colombia no tiene horario de verano
 
 load_dotenv()
 
@@ -159,7 +161,7 @@ def auto_refresh():
         load_despachos_coverage.clear()
         st.session_state.ultima_carga = ahora
         st.rerun()
-    st.caption(f"Ultima actualizacion: {datetime.fromtimestamp(ultima):%H:%M:%S}")
+    st.caption(f"Ultima actualizacion: {datetime.fromtimestamp(ultima, BOGOTA):%H:%M:%S}")
 
 
 auto_refresh()
