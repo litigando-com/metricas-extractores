@@ -1,5 +1,6 @@
 import os
-from datetime import date, timedelta
+import time
+from datetime import date, datetime, timedelta
 
 import altair as alt
 import oracledb
@@ -144,11 +145,30 @@ st.caption(
     "(Gargantua, Atriox, Textract, revision manual, insercion directa/SAMAI)."
 )
 
+minutos = st.selectbox("Actualizar cada", [1, 3, 5, 10], index=2, format_func=lambda m: f"{m} min")
+
+
+@st.fragment(run_every=minutos * 60)
+def auto_refresh():
+    # El fragmento corre solo cada `minutos`; al vencer, se limpian los caches
+    # (su ttl fijo de 300s no sigue al selector) y se re-ejecuta toda la pagina.
+    ahora = time.time()
+    ultima = st.session_state.setdefault("ultima_carga", ahora)
+    if ahora - ultima >= minutos * 60 - 1:
+        load_data.clear()
+        load_despachos_coverage.clear()
+        st.session_state.ultima_carga = ahora
+        st.rerun()
+    st.caption(f"Ultima actualizacion: {datetime.fromtimestamp(ultima):%H:%M:%S}")
+
+
+auto_refresh()
+
 PRESET_DIAS = {"7 dias": 7, "30 dias": 30, "60 dias": 60, "90 dias": 90}
 preset = st.segmented_control(
     "Rango de fechas",
     options=[*PRESET_DIAS, "Personalizado"],
-    default="60 dias",
+    default="7 dias",
     required=True,
 )
 
